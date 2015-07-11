@@ -4,7 +4,7 @@ Donate link: https://zarza.com
 Tags: varnish, nginx, cloudflare, incapsula, cloudlayer, real ip, comments, spam, ip, proxy, ip-address, load balancer
 Requires at least: 2.7
 Tested up to: 4.3
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -16,8 +16,11 @@ Thank you for your interest in Zarza Real IP. This useful and free plugin correc
 
 [ZARZA](https://zarza.com/software/) | AHEAD OF OUR TIME
 == Changelog ==
+= 1.0.2 =
+* Added $_SERVER["HTTP_CF_VISITOR"] verification to turn $_SERVER['HTTPS'] = 'on' if CloudFlare report it on.
+
 = 1.0.1 =
-* Documentation fixes.
+* Documentation fixes
 
 = 1.0 =
 * Initial Release Launched
