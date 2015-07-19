@@ -1,23 +1,22 @@
 <?php
 /*
-Plugin Name: Zarza Real IP
-Plugin URI: https://wordpress.org/plugins/zarza-real-ip/ 
-Description: This useful and free plugin corrects automatically the user's IP address and allows Wordpress to use the Real IP address if you're behind a proxy or load balancer like nginx, varnish and so on. It will start working as soon as you activate it. It is also compatible with CloudFlare, Incapsula and many others.
-Version: 1.0.2
-Author: Zarza Corp
-Author URI: https://zarza.com/
-License: GPL3
+Plugin Name:    Zarza Real IP
+Plugin URI:     https://wordpress.org/plugins/zarza-real-ip/ 
+Description:    This useful and free plugin corrects automatically the user's IP address and allows Wordpress to use the Real IP address if you're behind a proxy or load balancer like nginx, varnish and so on. It will start working as soon as you activate it. It is also compatible with CloudFlare, Incapsula and many others.
+Version:        1.0.3
+Author:         Zarza Corp
+Author URI:     https://zarza.com/
+License:        GPL3
+
+Copyright 2015  Zarza  (website : https://zarza.com)
 */
 
 // Make sure we don't expose any info if called directly
-if ( !function_exists( 'add_action' ) ) {
-    echo "I'm a plugin, not much I can do when called directly. Thank you!";
-    exit;
-}
+defined('ABSPATH') or die("I'm a plugin, not much I can do when called directly.");   # From wp-load.php
 
 $zrz_ip_headers = array(
-    'HTTP_CF_CONNECTING_IP', //CloudFlare
-    'HTTP_X_FORWARDED_FOR', //Incapsula, Cloudlayer
+    'HTTP_CF_CONNECTING_IP', #CloudFlare
+    'HTTP_X_FORWARDED_FOR',  #Incapsula, Cloudlayer
     'HTTP_X_FORWARDED',
     'HTTP_FORWARDED_FOR',
     'HTTP_FORWARDED',
@@ -27,7 +26,7 @@ $zrz_ip_headers = array(
 
 foreach($zrz_ip_headers as $z) {
 
-    if($_SERVER[$z] == "127.0.0.1" || !(isset($_SERVER[$z]))){ // If some header is reporting localhost let's continue
+    if( ($_SERVER[$z] == "127.0.0.1") || !(isset($_SERVER[$z])) ) { # If some header is reporting localhost let's continue
 
         unset($_SERVER[$z]);
         continue;
@@ -55,7 +54,7 @@ foreach($zrz_ip_headers as $z) {
 }    
 
 // Fix issues with HTTPS
-if (($_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') || strpos($_SERVER["HTTP_CF_VISITOR"], "https") )  {
+if (($_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') || (strpos($_SERVER["HTTP_CF_VISITOR"], "https")) ) {
     $_SERVER['HTTPS'] = 'on';
 } 
 
