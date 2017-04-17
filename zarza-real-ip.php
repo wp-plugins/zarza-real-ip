@@ -9,6 +9,10 @@ Author URI:     https://zarza.com/
 License:        GPL3
 
 Copyright 2015  Zarza  (website : https://zarza.com)
+
+4/17/2017 Revised to correct "missing index" messages (trying to access non-existent headers).
+          Only check a header value if the respective header is defined.
+
 */
 
 // Make sure we don't expose any info if called directly
@@ -26,11 +30,12 @@ $zrz_ip_headers = array(
 
 foreach($zrz_ip_headers as $z) {
 
-    if( ($_SERVER[$z] == "127.0.0.1") || !(isset($_SERVER[$z])) ) { # If some header is reporting localhost let's continue
+	if (!isset($_SERVER[$z])) { continue; } // 04/17/2017:  Nothing further to do if this header not defined
 
-        unset($_SERVER[$z]);
-        continue;
-    }
+	if( $_SERVER[$z] == "127.0.0.1") { # If some header is reporting localhost let's continue
+		unset($_SERVER[$z]);
+		continue;
+	}
 
     if(!isset($zrz_ri_lock)){
         if (!function_exists('filter_var')) {
@@ -54,7 +59,11 @@ foreach($zrz_ip_headers as $z) {
 }    
 
 // Fix issues with HTTPS
-if (($_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') || (strpos($_SERVER["HTTP_CF_VISITOR"], "https")) ) {
+// 04/17/2017:  Only check value if header is defined
+if ( isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && ($_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') ) {
+    $_SERVER['HTTPS'] = 'on';
+} 
+if ( isset($_SERVER['HTTP_CF_VISITOR']) && (strpos($_SERVER["HTTP_CF_VISITOR"], "https")) ) {
     $_SERVER['HTTPS'] = 'on';
 } 
 
